@@ -1,0 +1,20 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Статичные файлы отдаём напрямую — не трогаем
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# /shop/[slug] → /shop/product.php?slug=[slug]
+RewriteRule ^shop/([a-z0-9_-]+)/?$ /shop/product.php?slug=$1 [L,QSA]
+
+# /articles/[slug] → /articles/article.php?slug=[slug]
+RewriteRule ^articles/([a-z0-9_-]+)/?$ /articles/article.php?slug=$1 [L,QSA]
+
+# /backstage/* → /backstage/index.php
+RewriteRule ^backstage/([a-z0-9_/-]+)/?$ /backstage/index.php?route=$1 [L,QSA]
+
+# Скачивание файлов через PHP-прокси
+RewriteRule ^download/([a-z0-9_-]+)/?$ /download.php?slug=$1 [L,QSA]

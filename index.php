@@ -17,32 +17,10 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;500&display=swap" rel="stylesheet">
 	<!-- Styles -->
-	<link rel="stylesheet" href="source/css/main.css">
+	<link rel="stylesheet" href="/source/css/main.css">
 </head>
 <body>
-
-	<!-- ===== HEADER ===== -->
-	<header class="header">
-		<div class="container header__inner">
-
-			<!-- logo -->
-			<a href="/" class="header__logo">
-				<img src="/logo.png" alt="ПрайсСмета" width="auto" height="40">
-			</a>
-
-			<!-- nav -->
-			<nav class="header__nav">
-				<a href="/shop" class="header__nav-btn">
-					<span class="header__nav-btn-icon">☰</span>
-					Сметы
-				</a>
-				<a href="/" class="header__nav-link">Главная</a>
-				<a href="/faq" class="header__nav-link">Вопросы и ответы</a>
-				<a href="/articles" class="header__nav-link">Статьи</a>
-			</nav>
-
-		</div>
-	</header>
+    <?php include ($_SERVER['DOCUMENT_ROOT'] . '/source/php/header.php'); ?>
 
 	<!-- ===== HERO ===== -->
 	<section class="hero">
@@ -50,7 +28,7 @@
 			<div class="hero__card">
 
 				<!-- bg image -->
-				<img src="/source/img/hero.webp" alt="" class="hero__bg" aria-hidden="true">
+				<img src="/source/img/hero.jpg" alt="" class="hero__bg" aria-hidden="true">
 
 				<!-- overlay -->
 				<div class="hero__overlay"></div>
@@ -340,64 +318,7 @@
 		</div>
 	</section>
 
-	<!-- ===== FOOTER ===== -->
-	<footer class="footer">
-		<div class="container footer__inner">
-
-			<div class="footer__col">
-				<h3 class="footer__col-title">Каталог</h3>
-				<nav class="footer__nav">
-					<a href="/shop/elektrika" class="footer__link">Смета электрика 2026</a>
-					<a href="/shop/plytochnyk" class="footer__link">Смета плиточника 2026</a>
-					<a href="/shop/santekhnika_elektrika" class="footer__link">Смета электрика и сантехника 2026</a>
-					<a href="/shop/santekhnika" class="footer__link">Смета сантехника 2026</a>
-				</nav>
-			</div>
-
-			<div class="footer__col">
-				<h3 class="footer__col-title">Сервисы</h3>
-				<nav class="footer__nav">
-					<a href="/articles" class="footer__link">Статьи и инструкции</a>
-				</nav>
-			</div>
-
-			<div class="footer__col">
-				<h3 class="footer__col-title">О компании</h3>
-				<nav class="footer__nav">
-					<a href="/faq" class="footer__link">Вопросы и ответы</a>
-				</nav>
-			</div>
-
-			<div class="footer__col">
-				<h3 class="footer__col-title">Наши контакты</h3>
-				<div class="footer__contacts">
-					<a href="https://t.me/montag_system" target="_blank" rel="noopener" class="footer__contact-btn" aria-label="Telegram">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-							<circle cx="12" cy="12" r="12" fill="#29B6F6"/>
-							<path d="M17.5 7L5 11.5l4 1.5 1.5 4.5 2-2.5 3.5 2.5 1.5-10z" fill="white"/>
-						</svg>
-					</a>
-					<a href="mailto:alexei.electric@yandex.ru" class="footer__contact-btn" aria-label="Email">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-							<rect x="2" y="4" width="20" height="16" rx="3" fill="#6B7280"/>
-							<path d="M2 7l10 7 10-7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-						</svg>
-					</a>
-				</div>
-			</div>
-
-		</div>
-
-		<div class="footer__bottom">
-			<div class="container footer__bottom-inner">
-				<span>© 2026 ПрайсСмета. Цифровые сметы для мастеров.</span>
-				<nav class="footer__bottom-nav">
-					<a href="/oferta" class="footer__bottom-link">Оферта</a>
-				</nav>
-			</div>
-		</div>
-
-	</footer>
+    <?php include ($_SERVER['DOCUMENT_ROOT'] . '/source/php/footer.php'); ?>
 
 	<script>
 		// листание стрелками
