@@ -104,7 +104,11 @@ $badge    = ($product['old_price'] && $product['old_price'] > 0)
 						<?php if ($hasAccess): ?>
 							<a href="/download/<?= htmlspecialchars($slug) ?>" class="product-page__btn">Скачать</a>
 						<?php else: ?>
-							<a href="#" class="product-page__btn js-buy" data-id="<?= $product['id'] ?>">Получить доступ</a>
+							<a href="#" class="product-page__btn js-buy"
+						data-id="<?= $product['id'] ?>"
+						data-title="<?= htmlspecialchars($product['title']) ?>"
+						data-price="<?= $price ?>"
+					>Получить доступ</a>
 						<?php endif; ?>
 
 						<div class="product-page__delivery">
@@ -179,7 +183,7 @@ $badge    = ($product['old_price'] && $product['old_price'] > 0)
 					document.dispatchEvent(new CustomEvent('open-login'));
 				<?php else: ?>
 					document.dispatchEvent(new CustomEvent('open-buy', {
-						detail: { productId: btn.dataset.id }
+						detail: { productId: btn.dataset.id, title: btn.dataset.title, price: btn.dataset.price }
 					}));
 				<?php endif; ?>
 			});

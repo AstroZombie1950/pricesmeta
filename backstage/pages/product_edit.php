@@ -18,17 +18,18 @@ if ($isEdit) {
 /* ─── Сохранение ──────────────────────────────────────────── */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
 
-	$id          = (int)($_POST['id'] ?? 0);
-	$fSlug       = trim($_POST['slug'] ?? '');
-	$fTitle      = trim($_POST['title'] ?? '');
-	$fDesc       = trim($_POST['content'] ?? '');
-	$fPrice      = (int)($_POST['price'] ?? 0);
-	$fOldPrice   = (int)($_POST['old_price'] ?? 0) ?: null;
-	$fSeoTitle   = trim($_POST['seo_title'] ?? '');
-	$fMetaDesc   = trim($_POST['meta_desc'] ?? '');
-	$fMetaKw     = trim($_POST['meta_keywords'] ?? '');
-	$fPublished  = isset($_POST['is_published']) ? 1 : 0;
-	$fImage      = $product['image'] ?? '';
+	$id         = (int)($_POST['id'] ?? 0);
+	$fSlug      = trim($_POST['slug'] ?? '');
+	$fTitle     = trim($_POST['title'] ?? '');
+	$fDesc      = trim($_POST['content'] ?? '');
+	$fPrice     = (int)($_POST['price'] ?? 0);
+	$fOldPrice  = (int)($_POST['old_price'] ?? 0) ?: null;
+	$fSeoTitle  = trim($_POST['seo_title'] ?? '');
+	$fMetaDesc  = trim($_POST['meta_desc'] ?? '');
+	$fMetaKw    = trim($_POST['meta_keywords'] ?? '');
+	$fPublished = isset($_POST['is_published']) ? 1 : 0;
+	$fImage     = $product['image'] ?? '';
+	$fFilesJson = $product['files'] ?? '[]';
 
 	/* Валидация */
 	if (!$fSlug || !$fTitle) {
@@ -52,18 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
 			if (!empty($_FILES['image']['tmp_name'])) {
 				$ext     = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
 				$allowed = ['jpg', 'jpeg', 'png', 'webp'];
-
 				if (!in_array($ext, $allowed)) {
-					$alert = 'err:Допустимые форматы: jpg, png, webp';
+					$alert = 'err:Допустимые форматы картинки: jpg, png, webp';
 				} else {
 					$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/products/';
 					if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-
 					$filename = $fSlug . '-' . time() . '.' . $ext;
 					if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename)) {
-						if ($fImage && file_exists($_SERVER['DOCUMENT_ROOT'] . $fImage)) {
-							unlink($_SERVER['DOCUMENT_ROOT'] . $fImage);
-						}
+						if ($fImage && file_exists($_SERVER['DOCUMENT_ROOT'] . $fImage)) unlink($_SERVER['DOCUMENT_ROOT'] . $fImage);
 						$fImage = '/uploads/products/' . $filename;
 					} else {
 						$alert = 'err:Не удалось сохранить изображение';
@@ -78,15 +75,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
 		}
 
 		if (!$alert) {
+
+			/* Файлы товара для скачивания */
+			$filesDir = $_SERVER['DOCUMENT_ROOT'] . '/files/products/' . $fSlug . '/';
+			$fFiles   = json_decode($fFilesJson, true) ?: [];
+
+			/* Удаляем отмеченные файлы */
+			foreach ($_POST['delete_file'] ?? [] as $fname) {
+				$fname  = basename($fname); /* защита от path traversal */
+				$fFiles = array_values(array_filter($fFiles, fn($f) => $f !== $fname));
+				if (file_exists($filesDir . $fname)) unlink($filesDir . $fname);
+			}
+
+			/* Загружаем новые файлы */
+			if (!empty($_FILES['product_files']['name'][0])) {
+				$allowedExt = ['xlsx', 'xls', 'pdf', 'zip', 'docx'];
+				if (!is_dir($filesDir)) mkdir($filesDir, 0755, true);
+
+				foreach ($_FILES['product_files']['tmp_name'] as $i => $tmp) {
+					if (!$tmp) continue;
+					$origName = $_FILES['product_files']['name'][$i];
+					$ext      = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+					if (!in_array($ext, $allowedExt)) continue;
+
+					/* Безопасное имя — оставляем кириллицу, латиницу, цифры, точку, дефис */
+					$safeName = preg_replace('/[^a-zA-Zа-яА-ЯёЁ0-9._\- ]/u', '', $origName);
+					$safeName = trim($safeName);
+					if (!$safeName) continue;
+
+					if (move_uploaded_file($tmp, $filesDir . $safeName)) {
+						if (!in_array($safeName, $fFiles)) $fFiles[] = $safeName;
+					}
+				}
+			}
+
+			$fFilesJson = json_encode($fFiles, JSON_UNESCAPED_UNICODE);
+
 			if ($isEdit) {
 				$stmt = $pdo->prepare('
 					UPDATE products SET
 						title = ?, description = ?, price = ?, old_price = ?,
-						image = ?, seo_title = ?, meta_desc = ?, meta_keywords = ?,
+						image = ?, files = ?, seo_title = ?, meta_desc = ?, meta_keywords = ?,
 						is_published = ?
 					WHERE id = ?
 				');
-				$stmt->execute([$fTitle, $fDesc, $fPrice, $fOldPrice, $fImage, $fSeoTitle, $fMetaDesc, $fMetaKw, $fPublished, $id]);
+				$stmt->execute([$fTitle, $fDesc, $fPrice, $fOldPrice, $fImage, $fFilesJson, $fSeoTitle, $fMetaDesc, $fMetaKw, $fPublished, $id]);
 				$alert = 'ok:Товар сохранён';
 
 				$stmt = $pdo->prepare('SELECT * FROM products WHERE id = ?');
@@ -95,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
 
 			} else {
 				$stmt = $pdo->prepare('
-					INSERT INTO products (slug, title, description, price, old_price, image, seo_title, meta_desc, meta_keywords, is_published)
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+					INSERT INTO products (slug, title, description, price, old_price, image, files, seo_title, meta_desc, meta_keywords, is_published)
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 				');
-				$stmt->execute([$fSlug, $fTitle, $fDesc, $fPrice, $fOldPrice, $fImage, $fSeoTitle, $fMetaDesc, $fMetaKw, $fPublished]);
+				$stmt->execute([$fSlug, $fTitle, $fDesc, $fPrice, $fOldPrice, $fImage, '[]', $fSeoTitle, $fMetaDesc, $fMetaKw, $fPublished]);
 
 				header("Location: /backstage/?route=products/edit&slug={$fSlug}&saved=1");
 				exit;
@@ -118,6 +151,7 @@ $fMetaDesc  = $_POST['meta_desc']     ?? $product['meta_desc']     ?? '';
 $fMetaKw    = $_POST['meta_keywords'] ?? $product['meta_keywords'] ?? '';
 $fPublished = $_POST['is_published']  ?? $product['is_published']  ?? 0;
 $fImage     = $product['image']       ?? '';
+$fFiles     = json_decode($product['files'] ?? '[]', true) ?: [];
 
 if (isset($_GET['saved'])) $alert = 'ok:Товар создан';
 
@@ -219,14 +253,10 @@ ob_start();
 					<button type="button" class="wysiwyg__btn" onclick="fmt('insertOrderedList')"   title="Нумерованный список">1.</button>
 					<div class="wysiwyg__btn wysiwyg__btn--sep"></div>
 					<button type="button" class="wysiwyg__btn" onclick="insertLink()"               title="Ссылка">🔗</button>
-					<button type="button" class="wysiwyg__btn" onclick="fmt('removeFormat')"        title="Сбросить форматирование">✕</button>
+					<button type="button" class="wysiwyg__btn" onclick="fmt('removeFormat')"        title="Сбросить">✕</button>
 				</div>
-				<div
-					class="wysiwyg__area"
-					id="editor"
-					contenteditable="true"
-					oninput="syncFromWysiwyg()"
-				><?= $fDesc ?></div>
+				<div class="wysiwyg__area" id="editor" contenteditable="true"
+					oninput="syncFromWysiwyg()"><?= $fDesc ?></div>
 			</div>
 		</div>
 
@@ -244,9 +274,7 @@ ob_start();
 		<label>Картинка товара</label>
 		<div class="upload">
 			<input type="file" name="image" id="imageInput" accept="image/*" onchange="previewImage(this)">
-			<p class="upload__text">
-				<?= $fImage ? 'Загрузить другое изображение' : 'Нажмите или перетащите файл (jpg, png, webp)' ?>
-			</p>
+			<p class="upload__text"><?= $fImage ? 'Загрузить другое изображение' : 'Нажмите или перетащите файл (jpg, png, webp)' ?></p>
 			<?php if ($fImage): ?>
 				<img src="<?= htmlspecialchars($fImage) ?>" class="upload__preview" alt="">
 			<?php endif; ?>
@@ -256,6 +284,35 @@ ob_start();
 			<input type="text" name="image_url" class="bs-input"
 				placeholder="Или вставьте URL картинки"
 				value="<?= !$fImage || str_starts_with($fImage, 'http') ? htmlspecialchars($fImage) : '' ?>">
+		</div>
+	</div>
+
+	<!-- Файлы товара -->
+	<div class="field" style="margin-bottom:16px;">
+		<label>Файлы для скачивания <span style="font-weight:400;color:var(--color-muted);">(xlsx, pdf, zip, docx)</span></label>
+
+		<!-- Уже загруженные файлы -->
+		<?php if ($fFiles): ?>
+		<div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+			<?php foreach ($fFiles as $fname): ?>
+			<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--color-bg); border:1px solid var(--color-border); border-radius:var(--radius-sm); padding:10px 14px;">
+				<span style="font-size:14px; font-family:var(--font-head); font-weight:500;">
+					📄 <?= htmlspecialchars($fname) ?>
+				</span>
+				<label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--color-sale); cursor:pointer; text-transform:none; letter-spacing:0; font-weight:400;">
+					<input type="checkbox" name="delete_file[]" value="<?= htmlspecialchars($fname) ?>">
+					Удалить
+				</label>
+			</div>
+			<?php endforeach; ?>
+		</div>
+		<?php endif; ?>
+
+		<!-- Загрузка новых файлов (multiple) -->
+		<div class="upload">
+			<input type="file" name="product_files[]" multiple
+				accept=".xlsx,.xls,.pdf,.zip,.docx">
+			<p class="upload__text">Нажмите или перетащите файлы — можно несколько сразу</p>
 		</div>
 	</div>
 

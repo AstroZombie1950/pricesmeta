@@ -18,3 +18,5 @@ RewriteRule ^backstage/([a-z0-9_/-]+)/?$ /backstage/index.php?route=$1 [L,QSA]
 
 # Скачивание файлов через PHP-прокси
 RewriteRule ^download/([a-z0-9_-]+)/?$ /download.php?slug=$1 [L,QSA]
+
+ErrorDocument 404 /404.php

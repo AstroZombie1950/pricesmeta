@@ -1,0 +1,159 @@
+.account { padding: 56px 0 80px; }
+
+/* Шапка кабинета */
+.account__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 40px;
+	flex-wrap: wrap;
+}
+
+.account__title {
+	font-family: var(--font-head);
+	font-size: clamp(24px, 3vw, 36px);
+	font-weight: 700;
+}
+
+.account__email {
+	font-size: 14px;
+	color: var(--color-muted);
+	margin-top: 4px;
+}
+
+.account__logout {
+	font-family: var(--font-head);
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--color-muted);
+	border: 1px solid var(--color-border);
+	padding: 9px 18px;
+	border-radius: var(--radius-sm);
+	transition: border-color .2s, color .2s;
+}
+
+.account__logout:hover { border-color: #EF4444; color: #EF4444; }
+
+/* Секция покупок */
+.account__section-title {
+	font-family: var(--font-head);
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 16px;
+}
+
+/* Список покупок */
+.account__list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.account__item {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: 20px 24px;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	transition: box-shadow .2s;
+}
+
+.account__item:hover { box-shadow: var(--shadow-card); }
+
+/* Картинка */
+.account__item-img {
+	width: 72px;
+	height: 72px;
+	border-radius: var(--radius-sm);
+	object-fit: cover;
+	flex-shrink: 0;
+	background: var(--color-bg);
+}
+
+/* Текст */
+.account__item-info {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.account__item-title {
+	font-family: var(--font-head);
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--color-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.account__item-date {
+	font-size: 13px;
+	color: var(--color-muted);
+}
+
+/* Кнопка скачать */
+.account__item-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: var(--color-accent);
+	color: #fff;
+	font-family: var(--font-head);
+	font-size: 14px;
+	font-weight: 600;
+	padding: 10px 20px;
+	border-radius: var(--radius-sm);
+	flex-shrink: 0;
+	transition: background .2s;
+}
+
+.account__item-btn:hover { background: var(--color-accent-h); }
+
+/* Пустое состояние */
+.account__empty {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: 48px 32px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+.account__empty-icon { font-size: 40px; }
+
+.account__empty-title {
+	font-family: var(--font-head);
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.account__empty-text { font-size: 15px; color: var(--color-muted); }
+
+.account__empty-btn {
+	display: inline-block;
+	margin-top: 8px;
+	background: var(--color-text);
+	color: #fff;
+	font-family: var(--font-head);
+	font-size: 14px;
+	font-weight: 600;
+	padding: 12px 28px;
+	border-radius: var(--radius-sm);
+	transition: background .2s;
+}
+
+.account__empty-btn:hover { background: var(--color-accent); }
+
+@media (max-width: 600px) {
+	.account__item { flex-wrap: wrap; }
+	.account__item-btn { width: 100%; justify-content: center; }
+}

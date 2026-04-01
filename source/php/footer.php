@@ -56,3 +56,4 @@
 			</div>
 		</div>
 	</footer>
+	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/popups.php'; ?>
