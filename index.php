@@ -21,6 +21,7 @@ $months = [
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ПрайсСмета — прайс-листы для мастеров</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="ПрайсСмета — автоматизированные сметы в Excel для электриков, сантехников и плиточников. Скачай готовый прайс-лист и начни зарабатывать больше.">
 	<meta name="keywords" content="смета электрика, прайс лист сантехника, смета плиточника, excel смета, прайс лист мастера">
 	<meta name="author" content="ПрайсСмета">

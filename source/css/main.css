@@ -132,26 +132,59 @@ img {
 	background: rgba(37,99,235,.06);
 }
 
+
+/* короткая версия текста — скрыта на десктопе */
+.header__nav-link-short { display: none; }
+.header__nav-link-full  { display: inline; }
+
+/* иконка аккаунта — скрыта на десктопе, показываем только на мобиле */
+.header__nav-icon { display: none; }
+
+/* текст кнопки аккаунта — виден на десктопе */
+.header__nav-label { display: inline; }
+
 /* — адаптив хедера — */
 @media (max-width: 768px) {
-	.header__logo {
-display: none;
-	}
+	/* лого скрыт */
+	.header__logo { display: none; }
 
 	.header__inner {
-gap: 0;
-height: auto;
-padding: 10px 0;
+		gap: 0;
+		height: auto;
+		padding: 10px 0;
+	}
+
+	.header__nav {
+		gap: 6px;
 	}
 
 	.header__nav-btn {
-font-size: 13px;
-padding: 7px 12px;
+		font-size: 13px;
+		padding: 7px 12px;
 	}
 
 	.header__nav-link {
-font-size: 13px;
-padding: 7px 8px;
+		font-size: 13px;
+		padding: 7px 8px;
+	}
+
+	/* "Вопросы и ответы" → "FAQ" */
+	.header__nav-link-full  { display: none; }
+	.header__nav-link-short { display: inline; }
+
+	/* кнопка аккаунта — только иконка */
+	.header__nav-account .header__nav-label { display: none; }
+	.header__nav-account .header__nav-icon  {
+		display: block;
+		flex-shrink: 0;
+	}
+
+	/* выравниваем кнопку-иконку как ссылку */
+	.header__nav-account {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 7px 8px;
 	}
 }
 

@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Вопросы и ответы — ПрайсСмета</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="Вопросы и ответы о готовых сметах и прайс-листах в Excel от ПрайсСмета. Как работают файлы, как получить доступ, можно ли редактировать.">
 	<meta name="keywords" content="вопросы и ответы, смета excel, прайс лист мастера, faq, частые вопросы">
 	<meta name="author" content="ПрайсСмета">

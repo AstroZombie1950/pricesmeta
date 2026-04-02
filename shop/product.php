@@ -41,6 +41,7 @@ $badge    = ($product['old_price'] && $product['old_price'] > 0)
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?= htmlspecialchars($pageTitle) ?></title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="<?= htmlspecialchars($product['meta_desc'] ?? '') ?>">
 	<meta name="keywords"    content="<?= htmlspecialchars($product['meta_keywords'] ?? '') ?>">
 	<meta name="author"      content="ПрайсСмета">

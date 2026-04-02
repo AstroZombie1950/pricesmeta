@@ -35,6 +35,7 @@ $date = date('j', $ts) . ' ' . $months[(int)date('n', $ts)] . ' ' . date('Y', $t
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?= htmlspecialchars($pageTitle) ?></title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="<?= htmlspecialchars($article['meta_desc'] ?? '') ?>">
 	<meta name="keywords"    content="<?= htmlspecialchars($article['meta_keywords'] ?? '') ?>">
 	<meta name="author"      content="ПрайсСмета">

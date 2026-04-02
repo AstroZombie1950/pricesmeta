@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /backstage/
+Disallow: /api/
+Disallow: /account/
+Disallow: /files/
+Disallow: /data/
+
+Sitemap: https://прайслистмастера.рф/sitemap.xml

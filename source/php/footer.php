@@ -6,10 +6,10 @@
 			<div class="footer__col">
 				<h3 class="footer__col-title">Каталог</h3>
 				<nav class="footer__nav">
-					<a href="/shop/elektrika" class="footer__link">Смета электрика 2026</a>
-					<a href="/shop/plytochnyk" class="footer__link">Смета плиточника 2026</a>
-					<a href="/shop/santekhnika_elektrika" class="footer__link">Смета электрика и сантехника 2026</a>
-					<a href="/shop/santekhnika" class="footer__link">Смета сантехника 2026</a>
+					<a href="/shop/xxx" class="footer__link">Смета</a>
+					<a href="/shop/xxx" class="footer__link">Смета</a>
+					<a href="/shop/xxx" class="footer__link">Смета</a>
+					<a href="/shop/xxx" class="footer__link">Смета</a>
 				</nav>
 			</div>
 
@@ -36,7 +36,7 @@
 							<path d="M17.5 7L5 11.5l4 1.5 1.5 4.5 2-2.5 3.5 2.5 1.5-10z" fill="white"/>
 						</svg>
 					</a>
-					<a href="/cdn-cgi/l/email-protection#7918151c011c10571c151c1a0d0b101a390018171d1c01570b0c" class="footer__contact-btn" aria-label="Email">
+					<a href="mailto:alexei.electric@yandex.ru" class="footer__contact-btn" aria-label="Email">
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 							<rect x="2" y="4" width="20" height="16" rx="3" fill="#6B7280"/>
 							<path d="M2 7l10 7 10-7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>

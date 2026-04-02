@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Сметы для мастеров — каталог цифровых товаров | ПрайсСмета</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="Готовые автосметы и прайс-листы в Excel для электриков, сантехников и плиточников. Скачайте и используйте сразу — без настройки.">
 	<meta name="keywords" content="смета электрика купить, прайс-лист сантехника, смета плиточника Excel, цифровая смета мастера 2026">
 	<meta name="author" content="ПрайсСмета">

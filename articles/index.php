@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Статьи и инструкции — ПрайсСмета</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="Полезные статьи и инструкции для мастеров: как составить смету, расценки на работы, советы по электрике и сантехнике.">
 	<meta name="keywords" content="статьи для мастеров, смета электрика, смета сантехника, инструкции по ремонту, расценки на работы">
 	<meta name="author" content="ПрайсСмета">

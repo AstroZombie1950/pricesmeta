@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Публичная оферта — ПрайсСмета</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="description" content="Публичная оферта ПрайсСмета — условия реализации товаров и услуг. Самозанятый Медведев Алексей Николаевич, ИНН 644005258193.">
 	<meta name="keywords" content="публичная оферта, условия покупки, прайссмета, договор оферта">
 	<meta name="author" content="ПрайсСмета">
