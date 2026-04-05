@@ -20,10 +20,10 @@ $months = [
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ПрайсСмета — прайс-листы для мастеров</title>
+	<title>Автоматические сметы в Excel для ремонта и строительства | ПрайсСмета</title>
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<meta name="description" content="ПрайсСмета — автоматизированные сметы в Excel для электриков, сантехников и плиточников. Скачай готовый прайс-лист и начни зарабатывать больше.">
-	<meta name="keywords" content="смета электрика, прайс лист сантехника, смета плиточника, excel смета, прайс лист мастера">
+	<meta name="description" content="ПрайсСмета — автоматические сметы и прайс-листы в Excel для мастеров, бригад и строительных компаний. Расчёт электрики, сантехники, отопления, плитки и отделки в удобных таблицах.">
+	<meta name="keywords" content="автоматические сметы в excel, сметы для ремонта и строительства, прайс-листы для мастеров, сметы для бригад, расчет электрики сантехники плитки">
 	<meta name="author" content="ПрайсСмета">
 	<!-- OG -->
 	<meta property="og:title" content="ПрайсСмета — прайс-листы для мастеров">
@@ -36,10 +36,147 @@ $months = [
 	<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;500&display=swap" rel="stylesheet">
 	<!-- Styles -->
 	<link rel="stylesheet" href="/source/css/main.css">
+
+
+
 </head>
 <body>
-	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/header.php'; ?>
 
+<?php
+/* Запускаем сессию если ещё не запущена */
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
+	<!-- ===== HEADER ===== -->
+	<header class="header">
+		<div class="container header__inner">
+			<a href="/" class="header__logo">
+				<img src="/logo.png" alt="ПрайсСмета" width="auto" height="40">
+			</a>
+
+			<!-- десктоп-навигация -->
+			<nav class="header__nav">
+				<a href="/shop" class="header__nav-btn">
+					<span class="header__nav-btn-icon">☰</span>
+					Сметы
+				</a>
+
+				<a href="/" class="header__nav-link">Главная</a>
+
+				<a href="/faq" class="header__nav-link">
+					<span class="header__nav-link-full">Вопросы и ответы</span>
+					<span class="header__nav-link-short">FAQ</span>
+				</a>
+
+				<a href="/articles" class="header__nav-link">Статьи</a>
+
+				<!-- дропдаун "Покупателям" -->
+				<div class="header__dropdown">
+					<button type="button" class="header__nav-link header__dropdown-toggle">
+						Покупателям
+						<svg class="header__dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+							<path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<div class="header__dropdown-menu">
+						<a href="/payment_delivery" class="header__dropdown-link">Оплата и доставка</a>
+						<a href="/about" class="header__dropdown-link">О продавце</a>
+					</div>
+				</div>
+
+				<!-- кабинет / войти -->
+				<?php if (!empty($_SESSION['user_id'])): ?>
+					<a href="/account/" class="header__nav-link header__nav-account">
+						<svg class="header__nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<circle cx="12" cy="8" r="4"/>
+							<path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+							<polyline points="9 12 11 14 15 10" stroke-width="2"/>
+						</svg>
+						<span class="header__nav-label">Кабинет</span>
+					</a>
+				<?php else: ?>
+					<button type="button" class="header__nav-link header__nav-account" style="background:none; border:none; cursor:pointer; font-family:inherit; font-weight:500;" onclick="document.dispatchEvent(new CustomEvent('open-login'))">
+						<svg class="header__nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<circle cx="10" cy="8" r="4"/>
+							<path d="M4 20c0-4 3.2-7 7-7"/>
+							<polyline points="17 14 21 14"/>
+							<polyline points="19 12 21 14 19 16"/>
+						</svg>
+						<span class="header__nav-label">Войти</span>
+					</button>
+				<?php endif; ?>
+			</nav>
+
+			<!-- бургер-кнопка (только мобиле) -->
+			<button type="button" class="header__burger" aria-label="Меню" aria-expanded="false">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+
+		<!-- мобильное меню -->
+		<div class="header__mobile-menu">
+			<nav class="header__mobile-nav">
+				<a href="/shop" class="header__mobile-link header__mobile-link--accent">☰ Сметы</a>
+				<a href="/" class="header__mobile-link">Главная</a>
+				<a href="/faq" class="header__mobile-link">Вопросы и ответы</a>
+				<a href="/articles" class="header__mobile-link">Статьи</a>
+
+				<!-- дропдаун "Покупателям" в мобиле -->
+				<div class="header__mobile-dropdown">
+					<button type="button" class="header__mobile-link header__mobile-dropdown-toggle">
+						Покупателям
+						<svg class="header__dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+							<path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<div class="header__mobile-dropdown-menu">
+						<a href="/payment_delivery" class="header__mobile-sublink">Оплата и доставка</a>
+						<a href="/about" class="header__mobile-sublink">О продавце</a>
+					</div>
+				</div>
+
+				<!-- кабинет / войти -->
+				<?php if (!empty($_SESSION['user_id'])): ?>
+					<a href="/account/" class="header__mobile-link">Кабинет</a>
+				<?php else: ?>
+					<button type="button" class="header__mobile-link header__mobile-link--login" onclick="document.dispatchEvent(new CustomEvent('open-login')); document.querySelector('.header').classList.remove('menu-open');">Войти</button>
+				<?php endif; ?>
+			</nav>
+		</div>
+	</header>
+
+	<script>
+		/* дропдаун десктоп */
+		document.querySelectorAll('.header__dropdown-toggle').forEach(btn => {
+			btn.addEventListener('click', e => {
+				e.stopPropagation();
+				btn.closest('.header__dropdown').classList.toggle('is-open');
+			});
+		});
+
+		document.addEventListener('click', () => {
+			document.querySelectorAll('.header__dropdown.is-open')
+				.forEach(el => el.classList.remove('is-open'));
+		});
+
+		/* бургер */
+		const burger = document.querySelector('.header__burger');
+		const header = document.querySelector('.header');
+
+		burger.addEventListener('click', () => {
+			const isOpen = header.classList.toggle('menu-open');
+			burger.setAttribute('aria-expanded', isOpen);
+		});
+
+		/* дропдаун в мобильном меню */
+		document.querySelectorAll('.header__mobile-dropdown-toggle').forEach(btn => {
+			btn.addEventListener('click', () => {
+				btn.closest('.header__mobile-dropdown').classList.toggle('is-open');
+			});
+		});
+	</script>
+	
 	<!-- ===== HERO ===== -->
 	<section class="hero">
 		<div class="container">
@@ -47,8 +184,8 @@ $months = [
 				<img src="/source/img/hero.jpg" alt="" class="hero__bg" aria-hidden="true">
 				<div class="hero__overlay"></div>
 				<div class="hero__content">
-					<h1 class="hero__title">Готовые сметы и прайс‑листы в Excel для ремонта и строительства 2026</h1>
-					<p class="hero__sub">Автоматизированные таблицы для расчёта стоимости электрики, сантехники, отопления, плитки и отделочных работ</p>
+					<h1 class="hero__title">Автоматические сметы и прайс-листы в Excel для ремонта и строительства 2026</h1>
+					<p class="hero__sub">Автоматические файлы для расчёта электромонтажных, сантехнических, отопительных, плиточных и отделочных работ</p>
 					<a href="/shop" class="hero__btn">Смотреть сметы</a>
 				</div>
 			</div>
@@ -59,17 +196,21 @@ $months = [
 	<section class="about">
 		<div class="container about__inner">
 			<div class="about__text-col">
-				<p class="about__text">Этот сервис предлагает готовые сметы и прайс‑листы в формате Excel для мастеров, бригад и строительных компаний.<br><br>
-				В таблицах уже настроены позиции, категории и формулы, поэтому вы быстро посчитаете стоимость работ и подготовите коммерческое предложение для заказчика.<br><br>
-				Сметы подходят для расчёта электромонтажных работ, сантехники и отопления, плиточных, черновых и чистовых отделочных работ.<br><br>
-				Каждый файл легко редактируется, сохраняется в PDF и подходит как для работы на компьютере, так и в онлайн‑версии Excel.</p>
+				<p class="about__text">ПрайсСмета — это автоматические сметы и прайс-листы в формате Excel для мастеров, бригад и небольших строительных компаний.
+				<br><br>
+				В таблицах уже настроены позиции, категории и формулы, поэтому автоматический расчет смет занимает минимум времени. Вы быстро считаете стоимость работ, подготавливаете коммерческое предложение и получаете понятный расчёт по объекту без ручного пересчёта каждой позиции.
+				<br><br>
+				Файлы подходят для расчёта электромонтажных работ, сантехники и отопления, плитки, а также черновой и чистовой отделки. Это удобная автоматическая смета в Excel для повседневной работы на объекте, в офисе и при согласовании цены с заказчиком.
+				<br><br>
+				Каждый файл легко редактируется, сохраняется в PDF и подходит как для компьютера, так и для работы через онлайн-таблицы. Если нужна онлайн смета без сложной настройки, достаточно открыть файл, подставить свои объёмы и расценки, а затем сразу получить итоговую стоимость работ.
+				</p>
 			</div>
 			<ul class="about__list">
-				<li class="about__item">Готовые сметы и прайс‑листы по основным видам работ</li>
-				<li class="about__item">Актуальные расценки и подробные позиции</li>
-				<li class="about__item">Автоматический расчёт итоговой стоимости</li>
-				<li class="about__item">Удобно для частных мастеров и компаний</li>
-				<li class="about__item">Экономия времени на подготовку смет и КП</li>
+				<li class="about__item">Автоматические сметы и прайс-листы по основным видам работ</li>
+				<li class="about__item">Подробные позиции для расчёта ремонта и строительства</li>
+				<li class="about__item">Автоматический расчёт итоговой стоимости по объекту</li>
+				<li class="about__item">Удобно для частных мастеров, бригад и компаний</li>
+				<li class="about__item">Экономия времени на подготовку смет и коммерческих предложений</li>
 			</ul>
 		</div>
 	</section>
@@ -79,7 +220,7 @@ $months = [
 		<div class="container">
 
 			<div class="products__head">
-				<h2 class="products__title">Рекомендуем приобрести</h2>
+				<h2 class="products__title">Автоматические сметы и прайс-листы для мастеров и строительных компаний</h2>
 				<p class="products__sub">Отличные товары по выгодной цене</p>
 			</div>
 
@@ -200,9 +341,9 @@ $months = [
 		<div class="container">
 			<h2 class="seotext__title">Готовые сметы и прайс-листы для мастеров и строительных компаний</h2>
 			<div class="seotext__body">
-				<p class="seotext__p">Составить смету вручную — долго и сложно. Наш сервис предлагает готовые автоматизированные таблицы в формате Excel для электриков, сантехников, плиточников и строительных бригад. Все позиции, категории и формулы уже настроены — вам остаётся только внести объёмы работ и получить итоговую стоимость.</p>
+				<p class="seotext__p">Составлять смету вручную долго, особенно когда нужно быстро назвать цену клиенту или подготовить расчёт по объекту. ПрайсСмета помогает решить эту задачу проще: вы получаете готовые файлы с формулами, категориями и уже собранной структурой работ.</p>
 				<div class="seotext__more" id="seotextMore">
-					<p class="seotext__p">Каждый файл легко адаптируется под ваши расценки и регион, сохраняется в PDF и подходит как для работы на компьютере, так и в онлайн-версии Excel. Сметы помогают быстро подготовить коммерческое предложение для заказчика, выглядят профессионально и экономят часы работы на каждом объекте.</p>
+					<p class="seotext__p">Это удобный вариант для тех, кому нужна автоматическая смета для ремонта квартир, частных домов и небольших коммерческих помещений. Файлы подходят мастерам, которые хотят быстрее считать объёмы, не тратить время на ручной пересчёт и держать все расценки в одном месте.<br><br>Если вам нужна смета работ онлайн, файл можно открыть в Excel или в совместимом онлайн-сервисе, внести свои данные и сразу получить итоговую стоимость. Такой формат особенно удобен для электрики, сантехники, отопления, плитки и отделочных работ.<br><br>Для разных направлений вы можете выбрать отдельные решения в каталог.</p>
 				</div>
 			</div>
 			<button class="seotext__toggle" id="seotextToggle">
@@ -230,7 +371,6 @@ $months = [
 	</section>
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/footer.php'; ?>
-	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/popups.php'; ?>
 	<script src="/source/js/main_page.js"></script>
 </body>
 </html>

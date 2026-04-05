@@ -3,14 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Сметы для мастеров — каталог цифровых товаров | ПрайсСмета</title>
+	<title>Каталог смет и прайс-листов в Excel для мастеров | ПрайсСмета</title>
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<meta name="description" content="Готовые автосметы и прайс-листы в Excel для электриков, сантехников и плиточников. Скачайте и используйте сразу — без настройки.">
-	<meta name="keywords" content="смета электрика купить, прайс-лист сантехника, смета плиточника Excel, цифровая смета мастера 2026">
+	<meta name="description" content="Выберите смету или прайс-лист в Excel под своё направление: электромонтажные, сантехнические, отопительные и плиточные работы. Отдельные файлы и комплектные решения в одном каталоге.">
+	<meta name="keywords" content="каталог смет excel, смета электромонтажных работ, смета сантехнических работ, смета отопительных работ, смета плиточных работ, комплект смет для мастера">
 	<meta name="author" content="ПрайсСмета">
 	<!-- OG -->
-	<meta property="og:title" content="Сметы для мастеров — каталог цифровых товаров | ПрайсСмета">
-	<meta property="og:description" content="Готовые автосметы и прайс-листы в Excel для электриков, сантехников и плиточников.">
+	<meta property="og:title" content="Каталог смет и прайс-листов в Excel для мастеров | ПрайсСмета">
+	<meta property="og:description" content="Каталог Excel-смет по направлениям: электрика, сантехника, отопление, плитка и комплекты для нескольких видов работ.">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="https://прайслистмастера.рф/shop">
 	<!-- Fonts -->
@@ -58,7 +58,7 @@
 							>
 						</a>
 						<div class="shop-card__body">
-							<h2 class="shop-card__name"><?= htmlspecialchars($product['title']) ?></h2>
+							<h2 class="shop-card__name"><?= htmlspecialchars($product['title']) ?></ы>
 							<div class="shop-card__price-row">
 								<span class="shop-card__price"><?= number_format($product['price'], 0, '', ' ') ?> ₽</span>
 								<?php if ($product['old_price']): ?>
@@ -77,8 +77,38 @@
 
 			</div>
 		</section>
+		<!-- seo-текст -->
+		<section class="seotext">
+			<div class="container">
+				<h2 class="seotext__title">Автоматические сметы и прайс-листы в Excel для мастеров</h2>
+				<p class="seotext__p">В каталоге ПрайсСмета собраны автоматические сметы и прайс-листы в Excel для мастеров, бригад и небольших строительных компаний. Эти файлы помогают быстро считать стоимость работ, подготавливать коммерческие предложения и вести расчёты по объектам без ручного пересчёта каждой позиции. Если нужна автоматическая смета в Excel для повседневной работы, здесь можно выбрать готовое решение под своё направление.</p>
+
+				<div class="seotext__more" id="seoMore">
+					<p class="seotext__p">В каталоге доступны файлы для электромонтажных, сантехнических, отопительных и плиточных работ. Отдельные сметы удобно использовать, когда мастер работает в одном направлении и хочет держать под рукой готовый прайс и понятную структуру расчёта. Если нужны сразу несколько разделов, можно выбрать комплект для электрики и сантехники, чтобы вести расчёты в одном рабочем наборе.</p>
+					<p class="seotext__p">Каждая смета редактируется под свои расценки, объёмы и формат работы. Файлы подходят для расчёта квартир, частных домов, таунхаусов и небольших коммерческих помещений. Таблицы можно открыть на компьютере, сохранить в PDF для клиента или использовать через онлайн-таблицы, если нужна онлайн смета без сложной настройки и лишнего функционала.</p>
+					<p class="seotext__p">Такой формат особенно удобен для мастеров, которым важно быстро считать стоимость работ, не тратить время на создание сметы с нуля и держать все основные позиции в одном месте. Каталог ПрайсСмета помогает выбрать подходящий файл под конкретную задачу: электрика, сантехника и отопление, плитка или комплект для нескольких видов работ сразу.</p>
+				</div>
+
+				<button class="seotext__toggle" id="seoToggle">
+					Читать далее <span class="seotext__toggle-icon">↓</span>
+				</button>
+			</div>
+		</section>
 	</main>
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/footer.php'; ?>
+
+	<script>
+		/* seo-текст — раскрыть/скрыть */
+		const seoToggle = document.getElementById('seoToggle');
+		const seoMore   = document.getElementById('seoMore');
+
+		seoToggle.addEventListener('click', () => {
+			const isOpen = seoMore.classList.toggle('is-open');
+			seoToggle.innerHTML = isOpen
+				? 'Свернуть <span class="seotext__toggle-icon">↑</span>'
+				: 'Читать далее <span class="seotext__toggle-icon">↓</span>';
+		});
+	</script>
 </body>
 </html>

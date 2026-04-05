@@ -6,10 +6,10 @@
 			<div class="footer__col">
 				<h3 class="footer__col-title">Каталог</h3>
 				<nav class="footer__nav">
-					<a href="/shop/xxx" class="footer__link">Смета</a>
-					<a href="/shop/xxx" class="footer__link">Смета</a>
-					<a href="/shop/xxx" class="footer__link">Смета</a>
-					<a href="/shop/xxx" class="footer__link">Смета</a>
+					<a href="/shop/avtosmeta-na-elektromontazhnye-i-santekhnicheskie-raboty-komplekt" class="footer__link">Смета на электромонтажные и сантехнические работы</a>
+					<a href="/shop/avtosmeta-i-prays-list-na-plitochnye-raboty" class="footer__link">Смета и прайс-лист на плиточные работы</a>
+					<a href="/shop/avtosmeta-i-prays-list-na-santekhnicheskie-i-otopitelnye-raboty" class="footer__link">АСмета и прайс-лист на сантехнические и отопительные работы</a>
+					<a href="/shop/avtosmeta-i-prays-list-na-elektromontazhnye-raboty" class="footer__link">Смета и прайс-лист на электромонтажные работы</a>
 				</nav>
 			</div>
 
@@ -52,6 +52,7 @@
 				<span>© 2026 ПрайсСмета. Цифровые сметы для мастеров.</span>
 				<nav class="footer__bottom-nav">
 					<a href="/oferta" class="footer__bottom-link">Оферта</a>
+					<a href="/policy" class="footer__bottom-link">Политика обработки персональных данных</a>
 				</nav>
 			</div>
 		</div>

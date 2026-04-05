@@ -90,11 +90,13 @@
 	pointer-events: none;
 	transition: opacity .2s;
 	padding: 16px;
+    visibility: hidden;
 }
 
 .popup-overlay.is-open {
 	opacity: 1;
 	pointer-events: auto;
+    visibility: visible;
 }
 
 .popup {
@@ -315,7 +317,7 @@ async function submitLogin() {
 
 		if (data.ok) {
 			showAlert('authAlert', 'ok', 'Вход выполнен. Обновляем страницу...');
-			setTimeout(() => location.reload(), 800);
+			setTimeout(() => { location.href = location.href; }, 800);
 		} else {
 			showAlert('authAlert', 'err', data.error || 'Ошибка входа');
 			btn.disabled = false;
@@ -363,7 +365,7 @@ async function submitRegister() {
 
 		if (data.ok) {
 			showAlert('authAlert', 'ok', 'Аккаунт создан. Обновляем страницу...');
-			setTimeout(() => location.reload(), 800);
+			setTimeout(() => { location.href = location.href; }, 800);
 		} else {
 			showAlert('authAlert', 'err', data.error || 'Ошибка регистрации');
 			btn.disabled = false;

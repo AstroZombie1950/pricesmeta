@@ -102,6 +102,5 @@ $months = [
 	</main>
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/footer.php'; ?>
-	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/php/popups.php'; ?>
 </body>
 </html>
