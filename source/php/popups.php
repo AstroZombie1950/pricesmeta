@@ -1,6 +1,5 @@
 <?php
 /* Попапы подключаются в footer.php — доступны на всех страницах */
-/* $pdo и auth_check() уже доступны так как db.php и auth.php подключены раньше */
 ?>
 
 <!-- ===== ПОПАП АВТОРИЗАЦИИ ===== -->
@@ -9,43 +8,85 @@
 
 		<button type="button" class="popup__close" onclick="closePopup('popupAuth')">✕</button>
 
-		<!-- Вкладки -->
-		<div class="popup__tabs">
-			<button type="button" class="popup__tab is-active" onclick="switchPopupTab('login', this)">Войти</button>
-			<button type="button" class="popup__tab"           onclick="switchPopupTab('register', this)">Зарегистрироваться</button>
+		<!-- Шаг 1: ввод email -->
+		<div class="popup__step" id="authStep1">
+			<h2 class="popup__title">Войти или зарегистрироваться</h2>
+			<p class="popup__sub">Введите email — мы всё сделаем сами</p>
+
+			<div class="popup__alert" id="authAlert1" style="display:none;"></div>
+
+			<div class="popup__field">
+				<label for="authEmail">Email</label>
+				<input type="email" id="authEmail" class="popup__input" placeholder="your@email.com"
+					onkeydown="if(event.key==='Enter') submitCheckEmail()">
+			</div>
+
+			<button type="button" class="popup__btn" id="btnCheckEmail" onclick="submitCheckEmail()">
+				Продолжить →
+			</button>
 		</div>
 
-		<!-- Сообщение об ошибке / успехе -->
-		<div class="popup__alert" id="authAlert" style="display:none;"></div>
+		<!-- Шаг 2: ввод пароля (только для существующих пользователей) -->
+		<div class="popup__step" id="authStep2" style="display:none;">
+			<button type="button" class="popup__back" onclick="authGoBack()">← Назад</button>
+			<h2 class="popup__title">Добро пожаловать</h2>
+			<p class="popup__sub" id="authStep2Email"></p>
 
-		<!-- Форма входа -->
-		<div class="popup__panel is-active" id="popup-panel-login">
+			<div class="popup__alert" id="authAlert2" style="display:none;"></div>
+
 			<div class="popup__field">
-				<label for="loginEmail">Email</label>
-				<input type="email" id="loginEmail" class="popup__input" placeholder="your@email.com">
+				<label for="authPassword">Пароль</label>
+				<input type="password" id="authPassword" class="popup__input" placeholder="••••••••"
+					onkeydown="if(event.key==='Enter') submitLogin()">
 			</div>
-			<div class="popup__field">
-				<label for="loginPassword">Пароль</label>
-				<input type="password" id="loginPassword" class="popup__input" placeholder="••••••••">
-			</div>
-			<button type="button" class="popup__btn" onclick="submitLogin()">Войти →</button>
+
+			<a href="#" class="popup__forgot" onclick="event.preventDefault(); document.getElementById('resetEmail').value = document.getElementById('authEmail').value; showStep(4)">Восстановить пароль</a>
+
+			<button type="button" class="popup__btn" id="btnLogin" onclick="submitLogin()">
+				Войти →
+			</button>
 		</div>
 
-		<!-- Форма регистрации -->
-		<div class="popup__panel" id="popup-panel-register">
+		<!-- Шаг 3: успех / переход к оплате -->
+		<div class="popup__step" id="authStep3" style="display:none;">
+			<div class="popup__success-icon">✓</div>
+			<h2 class="popup__title" id="authStep3Title">Вы вошли</h2>
+			<p class="popup__sub" id="authStep3Sub"></p>
+
+			<div class="popup__alert" id="authAlert3" style="display:none;"></div>
+
+			<!-- кнопка меняется в зависимости от контекста -->
+			<button type="button" class="popup__btn" id="btnAuthFinal" onclick="authFinalAction()">
+				Перейти в кабинет →
+			</button>
+		</div>
+
+		<!-- Шаг 4: запрос сброса пароля -->
+		<div class="popup__step" id="authStep4" style="display:none;">
+			<button type="button" class="popup__back" onclick="showStep(2)">← Назад</button>
+			<h2 class="popup__title">Восстановить пароль</h2>
+			<p class="popup__sub">Пришлём ссылку на указанный email</p>
+
+			<div class="popup__alert" id="authAlert4" style="display:none;"></div>
+
 			<div class="popup__field">
-				<label for="regEmail">Email</label>
-				<input type="email" id="regEmail" class="popup__input" placeholder="your@email.com">
+				<label for="resetEmail">Email</label>
+				<input type="email" id="resetEmail" class="popup__input" placeholder="your@email.com"
+					onkeydown="if(event.key==='Enter') submitRequestReset()">
 			</div>
-			<div class="popup__field">
-				<label for="regPassword">Пароль</label>
-				<input type="password" id="regPassword" class="popup__input" placeholder="Минимум 6 символов">
-			</div>
-			<div class="popup__field">
-				<label for="regPassword2">Повторите пароль</label>
-				<input type="password" id="regPassword2" class="popup__input" placeholder="••••••••">
-			</div>
-			<button type="button" class="popup__btn" onclick="submitRegister()">Создать аккаунт →</button>
+
+			<button type="button" class="popup__btn" id="btnRequestReset" onclick="submitRequestReset()">
+				Отправить письмо →
+			</button>
+		</div>
+
+		<!-- Шаг 5: письмо отправлено -->
+		<div class="popup__step" id="authStep5" style="display:none;">
+			<div class="popup__success-icon">✉</div>
+			<h2 class="popup__title">Письмо отправлено</h2>
+			<p class="popup__sub" id="authStep5Sub"></p>
+			<p style="font-size:13px; color:var(--color-muted);">Перейдите по ссылке в письме чтобы задать новый пароль. Ссылка действует 1 час.</p>
+			<button type="button" class="popup__btn" onclick="closePopup('popupAuth')">Закрыть</button>
 		</div>
 
 	</div>
@@ -64,7 +105,6 @@
 
 		<div class="popup__alert" id="buyAlert" style="display:none;"></div>
 
-		<!-- Кнопка оплаты — пока заглушка, потом подключим эквайринг -->
 		<button type="button" class="popup__btn" id="buyBtn" onclick="submitBuy()">
 			Перейти к оплате →
 		</button>
@@ -90,13 +130,13 @@
 	pointer-events: none;
 	transition: opacity .2s;
 	padding: 16px;
-    visibility: hidden;
+	visibility: hidden;
 }
 
 .popup-overlay.is-open {
 	opacity: 1;
 	pointer-events: auto;
-    visibility: visible;
+	visibility: visible;
 }
 
 .popup {
@@ -129,38 +169,42 @@
 
 .popup__close:hover { color: var(--color-text); }
 
-/* Вкладки */
-.popup__tabs {
-	display: flex;
-	gap: 4px;
-	border-bottom: 1px solid var(--color-border);
-	margin-bottom: 4px;
+/* Заголовки */
+.popup__title {
+	font-family: var(--font-head);
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--color-text);
 }
 
-.popup__tab {
-	padding: 8px 16px;
+.popup__sub {
+	font-size: 14px;
+	color: var(--color-muted);
+	margin-top: -8px;
+}
+
+/* Назад */
+.popup__back {
 	background: none;
 	border: none;
-	border-bottom: 2px solid transparent;
 	font-family: var(--font-head);
-	font-size: 14px;
-	font-weight: 600;
+	font-size: 13px;
+	font-weight: 500;
 	color: var(--color-muted);
 	cursor: pointer;
-	transition: color .2s, border-color .2s;
-	margin-bottom: -1px;
+	padding: 0;
+	margin-bottom: -4px;
+	transition: color .2s;
 }
 
-.popup__tab:hover { color: var(--color-text); }
+.popup__back:hover { color: var(--color-accent); }
 
-.popup__tab.is-active {
-	color: var(--color-accent);
-	border-bottom-color: var(--color-accent);
+/* Шаг */
+.popup__step {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 }
-
-/* Панели */
-.popup__panel { display: none; flex-direction: column; gap: 14px; }
-.popup__panel.is-active { display: flex; }
 
 /* Поля */
 .popup__field {
@@ -196,6 +240,19 @@
 
 .popup__input::placeholder { color: var(--color-muted); }
 
+/* Ссылка восстановления */
+.popup__forgot {
+	font-size: 13px;
+	color: var(--color-muted);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	align-self: flex-start;
+	margin-top: -6px;
+	transition: color .2s;
+}
+
+.popup__forgot:hover { color: var(--color-accent); }
+
 /* Кнопка */
 .popup__btn {
 	width: 100%;
@@ -214,6 +271,21 @@
 
 .popup__btn:hover { background: var(--color-accent); }
 .popup__btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Иконка успеха */
+.popup__success-icon {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: rgba(22,163,74,.1);
+	border: 1px solid rgba(22,163,74,.25);
+	color: #16A34A;
+	font-size: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-start;
+}
 
 /* Алерт */
 .popup__alert {
@@ -260,23 +332,51 @@ document.addEventListener('keydown', e => {
 	}
 });
 
-/* ─── Слушаем события от кнопок товара ─────────────────── */
+/* ─── Состояние попапа авторизации ──────────────────────── */
+let _authContext = null; /* { productId, title, price } или null если просто хедер */
+
+/* Слушаем события */
 document.addEventListener('open-login', () => {
-	clearAuthAlert();
-	openPopup('popupAuth');
+	_authContext = null;
+	openAuthPopup();
 });
 
 document.addEventListener('open-buy', e => {
-	openBuyPopup(e.detail);
+	/* Если не авторизован — сначала авторизация, потом оплата */
+	<?php if (empty($_SESSION['user_id'])): ?>
+		_authContext = e.detail;
+		openAuthPopup();
+	<?php else: ?>
+		/* Уже авторизован — сразу попап покупки */
+		openBuyPopup(e.detail);
+	<?php endif; ?>
 });
 
-/* ─── Вкладки авторизации ───────────────────────────────── */
-function switchPopupTab(name, btn) {
-	document.querySelectorAll('.popup__tab').forEach(t => t.classList.remove('is-active'));
-	document.querySelectorAll('.popup__panel').forEach(p => p.classList.remove('is-active'));
-	btn.classList.add('is-active');
-	document.getElementById('popup-panel-' + name).classList.add('is-active');
-	clearAuthAlert();
+/* ─── Открыть попап авторизации с чистым состоянием ─────── */
+function openAuthPopup() {
+	/* Сбрасываем все шаги */
+	showStep(1);
+	document.getElementById('authEmail').value = '';
+	document.getElementById('authPassword').value = '';
+	document.getElementById('resetEmail').value = '';
+	hideAlert('authAlert1');
+	hideAlert('authAlert2');
+	hideAlert('authAlert3');
+	openPopup('popupAuth');
+	setTimeout(() => document.getElementById('authEmail').focus(), 100);
+}
+
+/* ─── Переключение шагов ─────────────────────────────────── */
+function showStep(n) {
+	[1,2,3,4,5].forEach(i => {
+		document.getElementById('authStep' + i).style.display = i === n ? 'flex' : 'none';
+	});
+}
+
+function authGoBack() {
+	showStep(1);
+	hideAlert('authAlert2');
+	setTimeout(() => document.getElementById('authEmail').focus(), 100);
 }
 
 /* ─── Алерты ────────────────────────────────────────────── */
@@ -287,23 +387,87 @@ function showAlert(id, type, msg) {
 	el.style.display = 'block';
 }
 
-function clearAuthAlert() {
-	const el = document.getElementById('authAlert');
+function hideAlert(id) {
+	const el = document.getElementById(id);
 	el.style.display = 'none';
 	el.textContent = '';
 }
 
-/* ─── Вход ──────────────────────────────────────────────── */
-async function submitLogin() {
-	const email    = document.getElementById('loginEmail').value.trim();
-	const password = document.getElementById('loginPassword').value;
+/* ─── Шаг 1: проверяем email ─────────────────────────────── */
+async function submitCheckEmail() {
+	const email = document.getElementById('authEmail').value.trim();
 
-	if (!email || !password) {
-		showAlert('authAlert', 'err', 'Заполните все поля');
+	if (!email) {
+		showAlert('authAlert1', 'err', 'Введите email');
 		return;
 	}
 
-	const btn = document.querySelector('#popup-panel-login .popup__btn');
+	const btn = document.getElementById('btnCheckEmail');
+	btn.disabled = true;
+	btn.textContent = 'Проверяем...';
+
+	try {
+		const res  = await fetch('/api/auth.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ action: 'check_email', email })
+		});
+		const data = await res.json();
+
+		if (!data.ok) {
+			showAlert('authAlert1', 'err', data.error || 'Ошибка');
+			return;
+		}
+
+		if (data.exists) {
+			/* Пользователь есть — просим пароль */
+			document.getElementById('authStep2Email').textContent = email;
+			showStep(2);
+			setTimeout(() => document.getElementById('authPassword').focus(), 100);
+		} else {
+			/* Нового пользователя регистрируем, шлём пароль на почту */
+			await autoRegister(email);
+		}
+
+	} catch {
+		showAlert('authAlert1', 'err', 'Ошибка сети. Попробуйте ещё раз.');
+	} finally {
+		btn.disabled = false;
+		btn.textContent = 'Продолжить →';
+	}
+}
+
+/* ─── Авторегистрация ────────────────────────────────────── */
+async function autoRegister(email) {
+	try {
+		const res  = await fetch('/api/auth.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ action: 'auto_register', email })
+		});
+		const data = await res.json();
+
+		if (data.ok) {
+			authShowSuccess('Аккаунт создан', 'Пароль отправлен на ' + email);
+		} else {
+			showAlert('authAlert1', 'err', data.error || 'Ошибка регистрации');
+		}
+	} catch {
+		showAlert('authAlert1', 'err', 'Ошибка сети. Попробуйте ещё раз.');
+	}
+}
+
+/* ─── Шаг 2: вход по паролю ─────────────────────────────── */
+async function submitLogin() {
+	const email    = document.getElementById('authEmail').value.trim();
+	const password = document.getElementById('authPassword').value;
+
+	if (!password) {
+		showAlert('authAlert2', 'err', 'Введите пароль');
+		return;
+	}
+
+	const btn = document.getElementById('btnLogin');
 	btn.disabled = true;
 	btn.textContent = 'Входим...';
 
@@ -316,65 +480,64 @@ async function submitLogin() {
 		const data = await res.json();
 
 		if (data.ok) {
-			showAlert('authAlert', 'ok', 'Вход выполнен. Обновляем страницу...');
-			setTimeout(() => { location.href = location.href; }, 800);
+			authShowSuccess('Вы вошли', '');
 		} else {
-			showAlert('authAlert', 'err', data.error || 'Ошибка входа');
+			showAlert('authAlert2', 'err', data.error || 'Неверный пароль');
 			btn.disabled = false;
 			btn.textContent = 'Войти →';
 		}
 	} catch {
-		showAlert('authAlert', 'err', 'Ошибка сети. Попробуйте ещё раз.');
+		showAlert('authAlert2', 'err', 'Ошибка сети. Попробуйте ещё раз.');
 		btn.disabled = false;
 		btn.textContent = 'Войти →';
 	}
 }
 
-/* ─── Регистрация ───────────────────────────────────────── */
-async function submitRegister() {
-	const email     = document.getElementById('regEmail').value.trim();
-	const password  = document.getElementById('regPassword').value;
-	const password2 = document.getElementById('regPassword2').value;
+/* ─── Шаг 3: финальный экран ─────────────────────────────── */
+function authShowSuccess(title, sub) {
+	document.getElementById('authStep3Title').textContent = title;
+	document.getElementById('authStep3Sub').textContent   = sub;
+	document.getElementById('btnAuthFinal').textContent   = 'Продолжить →';
+	showStep(3);
+}
 
-	if (!email || !password || !password2) {
-		showAlert('authAlert', 'err', 'Заполните все поля');
+/* ─── Действие финальной кнопки — всегда перезагрузка ───── */
+function authFinalAction() {
+	location.reload();
+}
+
+/* ─── Шаг 4: запрос сброса пароля ───────────────────────── */
+async function submitRequestReset() {
+	const email = document.getElementById('resetEmail').value.trim();
+
+	if (!email) {
+		showAlert('authAlert4', 'err', 'Введите email');
 		return;
 	}
 
-	if (password !== password2) {
-		showAlert('authAlert', 'err', 'Пароли не совпадают');
-		return;
-	}
-
-	if (password.length < 6) {
-		showAlert('authAlert', 'err', 'Пароль должен быть не менее 6 символов');
-		return;
-	}
-
-	const btn = document.querySelector('#popup-panel-register .popup__btn');
+	const btn = document.getElementById('btnRequestReset');
 	btn.disabled = true;
-	btn.textContent = 'Создаём аккаунт...';
+	btn.textContent = 'Отправляем...';
 
 	try {
 		const res  = await fetch('/api/auth.php', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ action: 'register', email, password })
+			body: JSON.stringify({ action: 'request_reset', email })
 		});
 		const data = await res.json();
 
 		if (data.ok) {
-			showAlert('authAlert', 'ok', 'Аккаунт создан. Обновляем страницу...');
-			setTimeout(() => { location.href = location.href; }, 800);
+			document.getElementById('authStep5Sub').textContent = 'Письмо отправлено на ' + email;
+			showStep(5);
 		} else {
-			showAlert('authAlert', 'err', data.error || 'Ошибка регистрации');
-			btn.disabled = false;
-			btn.textContent = 'Создать аккаунт →';
+			showAlert('authAlert4', 'err', data.error || 'Ошибка');
 		}
 	} catch {
-		showAlert('authAlert', 'err', 'Ошибка сети. Попробуйте ещё раз.');
+		showAlert('authAlert4', 'err', 'Ошибка сети. Попробуйте ещё раз.');
+	} finally {
 		btn.disabled = false;
-		btn.textContent = 'Создать аккаунт →';
+		btn.textContent = 'Отправить письмо →';
 	}
 }
 
@@ -388,7 +551,7 @@ function openBuyPopup(detail) {
 	document.getElementById('buyAlert').style.display = 'none';
 	const btn = document.getElementById('buyBtn');
 	btn.disabled = false;
-	btn.textContent = 'Получить доступ →';
+	btn.textContent = 'Перейти к оплате →';
 	openPopup('popupBuy');
 }
 
@@ -411,12 +574,12 @@ async function submitBuy() {
 		} else {
 			showAlert('buyAlert', 'err', data.error || 'Ошибка');
 			btn.disabled = false;
-			btn.textContent = 'Получить доступ →';
+			btn.textContent = 'Перейти к оплате →';
 		}
 	} catch {
 		showAlert('buyAlert', 'err', 'Ошибка сети. Попробуйте ещё раз.');
 		btn.disabled = false;
-		btn.textContent = 'Получить доступ →';
+		btn.textContent = 'Перейти к оплате →';
 	}
 }
 </script>

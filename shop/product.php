@@ -176,17 +176,13 @@ $badge    = ($product['old_price'] && $product['old_price'] > 0)
 			});
 		});
 
-		/* Кнопка покупки */
+		/* Кнопка покупки — всегда шлём open-buy, попап сам решает авторизован ли пользователь */
 		document.querySelectorAll('.js-buy').forEach(btn => {
 			btn.addEventListener('click', e => {
 				e.preventDefault();
-				<?php if (!auth_check()): ?>
-					document.dispatchEvent(new CustomEvent('open-login'));
-				<?php else: ?>
-					document.dispatchEvent(new CustomEvent('open-buy', {
-						detail: { productId: btn.dataset.id, title: btn.dataset.title, price: btn.dataset.price }
-					}));
-				<?php endif; ?>
+				document.dispatchEvent(new CustomEvent('open-buy', {
+					detail: { productId: btn.dataset.id, title: btn.dataset.title, price: btn.dataset.price }
+				}));
 			});
 		});
 	</script>

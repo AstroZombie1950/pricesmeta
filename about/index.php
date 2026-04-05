@@ -3,17 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Оплата и доставка | ПрайсСмета</title>
+	<title>О продавце | ПрайсСмета</title>
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<meta name="description" content="Условия оплаты и получения товара на сайте ПрайсСмета. Безналичная оплата, мгновенный доступ после оплаты, электронная доставка.">
-	<meta name="keywords" content="оплата, доставка, получение товара, прайссмета">
+	<meta name="description" content="Информация о продавце: реквизиты, контакты и сведения об операторе сайта ПрайсСмета.">
+	<meta name="keywords" content="о продавце, реквизиты, прайссмета">
 	<meta name="author" content="ПрайсСмета">
 	<meta name="robots" content="noindex, follow">
 	<!-- OG -->
-	<meta property="og:title" content="Оплата и доставка | ПрайсСмета">
-	<meta property="og:description" content="Условия оплаты и получения товара на сайте ПрайсСмета.">
+	<meta property="og:title" content="О продавце | ПрайсСмета">
+	<meta property="og:description" content="Реквизиты и контактная информация продавца сайта ПрайсСмета.">
 	<meta property="og:type" content="website">
-	<meta property="og:url" content="https://прайслистмастера.рф/payment_delivery">
+	<meta property="og:url" content="https://прайслистмастера.рф/about">
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,34 +33,25 @@
 				<nav class="shop__breadcrumbs" aria-label="Навигация">
 					<a href="/">Главная</a>
 					<span class="shop__breadcrumbs-sep">/</span>
-					<span>Оплата и доставка</span>
+					<span>О продавце</span>
 				</nav>
 
-				<h1 class="oferta__title">Оплата и доставка</h1>
+				<h1 class="oferta__title">О продавце</h1>
 
-				<!-- оплата -->
 				<div class="oferta__section">
-					<h2 class="oferta__section-title">Оплата</h2>
-					<p class="oferta__text">Оплата заказов осуществляется в безналичной форме через интернет-эквайринг на сайте. Все доступные материалы размещены в <a href="/shop" style="color: var(--color-accent); border-bottom: 1px solid rgba(37,99,235,.3);">каталоге</a>.</p>
+					<div class="oferta__requisites">
+						<p><strong>Медведев Алексей Николаевич</strong></p>
+						<p>Самозанятый</p>
+						<p>ИНН: <strong>644005258193</strong></p>
+						<p>Адрес: <strong>412346, Саратовская обл., Балашовский р-н, поселок Октябрьский, ул. Октябрьская, д. 1, кв. 2</strong></p>
+						<p>E-mail: <strong>ljeva@mail.ru</strong></p>
+						<p>Сайт: <strong>прайслистмастера.рф</strong></p>
+					</div>
 				</div>
 
-				<!-- получение доступа -->
 				<div class="oferta__section">
-					<h2 class="oferta__section-title">Получение товара</h2>
-					<p class="oferta__text">После подтверждения оплаты доступ к выбранному товару открывается автоматически. Обычно это происходит в течение 1 минуты.</p>
-					<p class="oferta__text">Ссылка на оплаченный товар отправляется на электронную почту, указанную при оформлении заказа. Также доступ к купленному товару сохраняется в профиле пользователя на сайте и остаётся доступен там после оплаты.</p>
-				</div>
-
-				<!-- доставка -->
-				<div class="oferta__section">
-					<h2 class="oferta__section-title">Доставка</h2>
-					<p class="oferta__text">Физическая доставка не осуществляется — товар предоставляется в электронном виде.</p>
-				</div>
-
-				<!-- помощь -->
-				<div class="oferta__section">
-					<h2 class="oferta__section-title">Если что-то пошло не так</h2>
-					<p class="oferta__text">Если после оплаты доступ не появился или письмо не пришло, свяжитесь с нами по контактам, указанным на сайте.</p>
+					<p class="oferta__text">Сайт предоставляет доступ к <a href="/shop" style="color: var(--color-accent); border-bottom: 1px solid rgba(37,99,235,.3);">автоматическим сметам</a> для специалистов по отделочным и монтажным работам.</p>
+					<p class="oferta__text">Оплата осуществляется в безналичной форме через сайт.</p>
 				</div>
 
 			</div>

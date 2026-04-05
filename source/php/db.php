@@ -63,6 +63,14 @@ $pdo->exec("
 		created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 	);
 
+	/* Токены сброса пароля — живут 1 час */
+	CREATE TABLE IF NOT EXISTS password_resets (
+		id         INTEGER PRIMARY KEY AUTOINCREMENT,
+		email      TEXT NOT NULL,
+		token      TEXT NOT NULL UNIQUE,
+		created_at TEXT NOT NULL DEFAULT (datetime('now'))
+	);
+
 	/* Покупки — связка пользователь → товар */
 	CREATE TABLE IF NOT EXISTS purchases (
 		id         INTEGER PRIMARY KEY AUTOINCREMENT,

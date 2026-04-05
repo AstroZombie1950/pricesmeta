@@ -11,6 +11,9 @@ RewriteRule ^ - [L]
 # Sitemap
 RewriteRule ^sitemap\.xml$ /sitemap.php [L]
 
+# /reset-password
+RewriteRule ^reset-password/?$ /reset-password.php [L,QSA]
+
 # /shop/[slug]
 RewriteRule ^shop/([a-z0-9_-]+)/?$ /shop/product.php?slug=$1 [L,QSA]
 

@@ -87,7 +87,15 @@ img {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	flex-wrap: wrap;
+}
+
+button.header__nav-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 400;
 }
 
 /* кнопка "Сметы" */

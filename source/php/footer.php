@@ -8,7 +8,7 @@
 				<nav class="footer__nav">
 					<a href="/shop/avtosmeta-na-elektromontazhnye-i-santekhnicheskie-raboty-komplekt" class="footer__link">Смета на электромонтажные и сантехнические работы</a>
 					<a href="/shop/avtosmeta-i-prays-list-na-plitochnye-raboty" class="footer__link">Смета и прайс-лист на плиточные работы</a>
-					<a href="/shop/avtosmeta-i-prays-list-na-santekhnicheskie-i-otopitelnye-raboty" class="footer__link">АСмета и прайс-лист на сантехнические и отопительные работы</a>
+					<a href="/shop/avtosmeta-i-prays-list-na-santekhnicheskie-i-otopitelnye-raboty" class="footer__link">Смета и прайс-лист на сантехнические и отопительные работы</a>
 					<a href="/shop/avtosmeta-i-prays-list-na-elektromontazhnye-raboty" class="footer__link">Смета и прайс-лист на электромонтажные работы</a>
 				</nav>
 			</div>

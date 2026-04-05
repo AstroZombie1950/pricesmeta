@@ -18,6 +18,51 @@ if (!$body) {
 
 $action = $body['action'] ?? '';
 
+/* Проверяем существует ли email */
+if ($action === 'check_email') {
+	$email = trim($body['email'] ?? '');
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		echo json_encode(['ok' => false, 'error' => 'Некорректный email']);
+		exit;
+	}
+	echo json_encode([
+		'ok'     => true,
+		'exists' => auth_email_exists($pdo, $email),
+	]);
+	exit;
+}
+
+/* Авторегистрация — создаём аккаунт и шлём пароль на почту */
+if ($action === 'auto_register') {
+	$result = auth_auto_register($pdo, trim($body['email'] ?? ''));
+	echo json_encode($result);
+	exit;
+}
+
+/* Проверяем есть ли у текущего пользователя доступ к товару */
+if ($action === 'check_access') {
+	$productId = (int)($body['product_id'] ?? 0);
+	echo json_encode([
+		'ok'         => true,
+		'has_access' => auth_has_access($pdo, $productId),
+	]);
+	exit;
+}
+
+/* Запрос сброса пароля — шлём письмо с токеном */
+if ($action === 'request_reset') {
+	$result = auth_request_reset($pdo, trim($body['email'] ?? ''));
+	echo json_encode($result);
+	exit;
+}
+
+/* Подтверждение сброса — меняем пароль по токену */
+if ($action === 'confirm_reset') {
+	$result = auth_confirm_reset($pdo, trim($body['token'] ?? ''), $body['password'] ?? '');
+	echo json_encode($result);
+	exit;
+}
+
 /* Вход */
 if ($action === 'login') {
 	$result = auth_login($pdo, trim($body['email'] ?? ''), $body['password'] ?? '');
