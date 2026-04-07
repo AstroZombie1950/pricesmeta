@@ -1,0 +1,70 @@
+.thankyou {
+	max-width: 480px;
+	margin: 80px auto;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+}
+
+.thankyou__icon {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	background: rgba(22,163,74,.1);
+	border: 2px solid rgba(22,163,74,.3);
+	color: #16A34A;
+	font-size: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.thankyou__title {
+	font-family: var(--font-head);
+	font-size: clamp(24px, 3vw, 36px);
+	font-weight: 700;
+}
+
+.thankyou__text {
+	font-size: 16px;
+	color: var(--color-muted);
+	line-height: 1.7;
+}
+
+.thankyou__actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-top: 8px;
+}
+
+.thankyou__btn {
+	display: inline-block;
+	font-family: var(--font-head);
+	font-size: 15px;
+	font-weight: 600;
+	padding: 13px 28px;
+	border-radius: var(--radius-sm);
+	transition: background .2s, border-color .2s, color .2s;
+}
+
+.thankyou__btn--primary {
+	background: var(--color-text);
+	color: #fff;
+}
+
+.thankyou__btn--primary:hover { background: var(--color-accent); }
+
+.thankyou__btn--outline {
+	background: transparent;
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+}
+
+.thankyou__btn--outline:hover {
+	border-color: var(--color-accent);
+	color: var(--color-accent);
+}

@@ -555,27 +555,51 @@ function openBuyPopup(detail) {
 	openPopup('popupBuy');
 }
 
+/* ─── Попап покупки ─── */
+
 async function submitBuy() {
 	const btn = document.getElementById('buyBtn');
 	btn.disabled = true;
 	btn.textContent = 'Подождите...';
 
 	try {
-		const res  = await fetch('/api/auth.php', {
+		const res  = await fetch('/api/payment.php', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ action: 'test_purchase', product_id: _buyProductId })
+			body: JSON.stringify({ product_id: _buyProductId })
 		});
 		const data = await res.json();
 
-		if (data.ok) {
-			showAlert('buyAlert', 'ok', 'Доступ открыт! Обновляем страницу...');
-			setTimeout(() => location.reload(), 800);
-		} else {
+		if (!data.ok) {
 			showAlert('buyAlert', 'err', data.error || 'Ошибка');
 			btn.disabled = false;
 			btn.textContent = 'Перейти к оплате →';
+			return;
 		}
+
+		if (data.already) {
+			showAlert('buyAlert', 'ok', 'У вас уже есть доступ! Обновляем...');
+			setTimeout(() => location.reload(), 800);
+			return;
+		}
+
+		/* Строим скрытую POST-форму и сабмитим */
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = data.action;
+		form.style.display = 'none';
+
+		Object.entries(data.fields).forEach(([key, value]) => {
+			const input = document.createElement('input');
+			input.type  = 'hidden';
+			input.name  = key;
+			input.value = value;
+			form.appendChild(input);
+		});
+
+		document.body.appendChild(form);
+		form.submit();
+
 	} catch {
 		showAlert('buyAlert', 'err', 'Ошибка сети. Попробуйте ещё раз.');
 		btn.disabled = false;
