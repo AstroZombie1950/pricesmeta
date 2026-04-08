@@ -1,6 +1,23 @@
 <?php
 /* Запускаем сессию если ещё не запущена */
 if (session_status() === PHP_SESSION_NONE) session_start();
+
+/* Текущий путь без query string и trailing slash (кроме '/') */
+$currentPath = strtok($_SERVER['REQUEST_URI'], '?');
+$currentPath = ($currentPath !== '/') ? rtrim($currentPath, '/') : '/';
+
+/* Хелпер: возвращает ' is-active'.
+   Префикс '=' — точное совпадение, без '=' — префиксное (/articles матчит /articles/slug) */
+function nav_active(string $currentPath, array $prefixes): string {
+	foreach ($prefixes as $prefix) {
+		if (str_starts_with($prefix, '=')) {
+			if ($currentPath === substr($prefix, 1)) return ' is-active';
+		} else {
+			if ($currentPath === $prefix || str_starts_with($currentPath, $prefix . '/')) return ' is-active';
+		}
+	}
+	return '';
+}
 ?>
 	<!-- ===== HEADER ===== -->
 	<header class="header">
@@ -11,23 +28,25 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 			<!-- десктоп-навигация -->
 			<nav class="header__nav">
-				<a href="/shop" class="header__nav-btn">
+				<!-- точное совпадение — только /shop, не /shop/slug -->
+				<a href="/shop" class="header__nav-btn<?= nav_active($currentPath, ['=/shop']) ?>">
 					<span class="header__nav-btn-icon">☰</span>
 					Сметы
 				</a>
 
-				<a href="/" class="header__nav-link">Главная</a>
+				<!-- точное совпадение — только главная -->
+				<a href="/" class="header__nav-link<?= nav_active($currentPath, ['=/']) ?>">Главная</a>
 
-				<a href="/faq" class="header__nav-link">
+				<a href="/faq" class="header__nav-link<?= nav_active($currentPath, ['/faq']) ?>">
 					<span class="header__nav-link-full">Вопросы и ответы</span>
 					<span class="header__nav-link-short">FAQ</span>
 				</a>
 
-				<a href="/articles" class="header__nav-link">Статьи</a>
+				<a href="/articles" class="header__nav-link<?= nav_active($currentPath, ['/articles']) ?>">Статьи</a>
 
 				<!-- дропдаун "Покупателям" -->
 				<div class="header__dropdown">
-					<button type="button" class="header__nav-link header__dropdown-toggle">
+					<button type="button" class="header__nav-link header__dropdown-toggle<?= nav_active($currentPath, ['/payment_delivery', '/about']) ?>">
 						Покупателям
 						<svg class="header__dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
 							<path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -41,7 +60,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 				<!-- кабинет / войти -->
 				<?php if (!empty($_SESSION['user_id'])): ?>
-					<a href="/account/" class="header__nav-link header__nav-account">
+					<a href="/account/" class="header__nav-link header__nav-account<?= nav_active($currentPath, ['/account']) ?>">
 						<svg class="header__nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<circle cx="12" cy="8" r="4"/>
 							<path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -73,13 +92,13 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 		<!-- мобильное меню -->
 		<div class="header__mobile-menu">
 			<nav class="header__mobile-nav">
-				<a href="/shop" class="header__mobile-link header__mobile-link--accent">☰ Сметы</a>
-				<a href="/" class="header__mobile-link">Главная</a>
-				<a href="/faq" class="header__mobile-link">Вопросы и ответы</a>
-				<a href="/articles" class="header__mobile-link">Статьи</a>
+				<a href="/shop" class="header__mobile-link header__mobile-link--accent<?= nav_active($currentPath, ['=/shop']) ?>">☰ Сметы</a>
+				<a href="/" class="header__mobile-link<?= nav_active($currentPath, ['=/']) ?>">Главная</a>
+				<a href="/faq" class="header__mobile-link<?= nav_active($currentPath, ['/faq']) ?>">Вопросы и ответы</a>
+				<a href="/articles" class="header__mobile-link<?= nav_active($currentPath, ['/articles']) ?>">Статьи</a>
 
 				<!-- дропдаун "Покупателям" в мобиле -->
-				<div class="header__mobile-dropdown">
+				<div class="header__mobile-dropdown<?= nav_active($currentPath, ['/payment_delivery', '/about']) ?>">
 					<button type="button" class="header__mobile-link header__mobile-dropdown-toggle">
 						Покупателям
 						<svg class="header__dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -94,7 +113,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 				<!-- кабинет / войти -->
 				<?php if (!empty($_SESSION['user_id'])): ?>
-					<a href="/account/" class="header__mobile-link">Кабинет</a>
+					<a href="/account/" class="header__mobile-link<?= nav_active($currentPath, ['/account']) ?>">Кабинет</a>
 				<?php else: ?>
 					<button type="button" class="header__mobile-link header__mobile-link--login" onclick="document.dispatchEvent(new CustomEvent('open-login')); document.querySelector('.header').classList.remove('menu-open');">Войти</button>
 				<?php endif; ?>
@@ -130,5 +149,10 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 			btn.addEventListener('click', () => {
 				btn.closest('.header__mobile-dropdown').classList.toggle('is-open');
 			});
+		});
+
+		/* Если "Покупателям" активен — раскрываем дропдаун в мобиле сразу */
+		document.querySelectorAll('.header__mobile-dropdown.is-active').forEach(el => {
+			el.classList.add('is-open');
 		});
 	</script>

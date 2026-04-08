@@ -14,7 +14,7 @@ if (isset($_GET['logout'])) {
 
 /* Купленные товары */
 $stmt = $pdo->prepare('
-	SELECT p.id, p.title, p.slug, p.image, p.price, pu.created_at AS bought_at
+	SELECT p.id, p.title, p.slug, p.image, p.price, p.files, pu.created_at AS bought_at
 	FROM purchases pu
 	JOIN products p ON p.id = pu.product_id
 	WHERE pu.user_id = ?
@@ -81,9 +81,13 @@ $months = [
 							<span class="account__item-title"><?= htmlspecialchars($p['title']) ?></span>
 							<span class="account__item-date">Куплено <?= $date ?></span>
 						</div>
-						<a href="/download/<?= htmlspecialchars($p['slug']) ?>" class="account__item-btn">
+						<button
+							type="button"
+							class="account__item-btn"
+							onclick="openDownloadPopup(<?= htmlspecialchars(json_encode($p['slug']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($p['title']), ENT_QUOTES) ?>, <?= htmlspecialchars($p['files'] ?? '[]', ENT_QUOTES) ?>)"
+						>
 							↓ Скачать
-						</a>
+						</button>
 					</div>
 					<?php endforeach; ?>
 				</div>

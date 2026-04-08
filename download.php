@@ -3,6 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/php/db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/php/auth.php';
 
 $slug = $_GET['slug'] ?? '';
+$file = $_GET['file'] ?? ''; /* конкретный файл или 'all' для архива */
 
 /* Ищем товар */
 $stmt = $pdo->prepare('SELECT * FROM products WHERE slug = ? AND is_published = 1');
@@ -27,19 +28,35 @@ if (!auth_has_access($pdo, $product['id'])) {
 	exit;
 }
 
-/* Получаем список файлов */
-$files = json_decode($product['files'] ?? '[]', true) ?: [];
+$files    = json_decode($product['files'] ?? '[]', true) ?: [];
+$filesDir = $_SERVER['DOCUMENT_ROOT'] . '/files/products/' . $slug . '/';
 
 if (empty($files)) {
 	header('Location: /shop/' . urlencode($slug));
 	exit;
 }
 
-$filesDir = $_SERVER['DOCUMENT_ROOT'] . '/files/products/' . $slug . '/';
+/* Хелпер: отдать один файл браузеру */
+function send_file(string $filepath, string $filename): void {
+	$mime = mime_content_type($filepath) ?: 'application/octet-stream';
+	header('Content-Type: ' . $mime);
+	header('Content-Disposition: attachment; filename="' . rawurlencode($filename) . '"');
+	header('Content-Length: ' . filesize($filepath));
+	header('Cache-Control: no-cache, no-store');
+	readfile($filepath);
+	exit;
+}
 
-/* Один файл — отдаём напрямую */
-if (count($files) === 1) {
-	$filename = basename($files[0]); /* защита от path traversal */
+/* Скачать один конкретный файл (?file=filename) */
+if ($file && $file !== 'all') {
+	$filename = basename($file); /* защита от path traversal */
+
+	/* Проверяем что файл входит в список товара */
+	if (!in_array($filename, $files)) {
+		http_response_code(403);
+		exit;
+	}
+
 	$filepath = $filesDir . $filename;
 
 	if (!file_exists($filepath)) {
@@ -48,17 +65,24 @@ if (count($files) === 1) {
 		exit;
 	}
 
-	$mime = mime_content_type($filepath) ?: 'application/octet-stream';
-
-	header('Content-Type: ' . $mime);
-	header('Content-Disposition: attachment; filename="' . $filename . '"');
-	header('Content-Length: ' . filesize($filepath));
-	header('Cache-Control: no-cache, no-store');
-	readfile($filepath);
-	exit;
+	send_file($filepath, $filename);
 }
 
-/* Несколько файлов — упаковываем в zip */
+/* Один файл без параметра — отдаём напрямую */
+if (count($files) === 1) {
+	$filename = basename($files[0]);
+	$filepath = $filesDir . $filename;
+
+	if (!file_exists($filepath)) {
+		http_response_code(404);
+		include $_SERVER['DOCUMENT_ROOT'] . '/404.php';
+		exit;
+	}
+
+	send_file($filepath, $filename);
+}
+
+/* Несколько файлов или file=all — упаковываем в ZIP */
 $zipName = $slug . '.zip';
 $zipPath = sys_get_temp_dir() . '/' . $zipName;
 
@@ -85,6 +109,5 @@ header('Content-Length: ' . filesize($zipPath));
 header('Cache-Control: no-cache, no-store');
 readfile($zipPath);
 
-/* Удаляем временный архив */
 unlink($zipPath);
 exit;

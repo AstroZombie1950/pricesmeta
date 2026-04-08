@@ -607,3 +607,157 @@ async function submitBuy() {
 	}
 }
 </script>
+
+<!-- ===== ПОПАП СКАЧИВАНИЯ ===== -->
+<div class="popup-overlay" id="popupDownload">
+	<div class="popup">
+
+		<button type="button" class="popup__close" onclick="closePopup('popupDownload')">✕</button>
+
+		<div class="popup__download-icon">📥</div>
+		<h2 class="popup__title" id="downloadTitle">Скачать файлы</h2>
+		<p class="popup__sub">Выберите файл или скачайте всё архивом</p>
+
+		<!-- список отдельных файлов -->
+		<div class="popup__files" id="downloadFiles"></div>
+
+		<!-- кнопка скачать всё -->
+		<a href="#" class="popup__btn popup__btn--download" id="downloadAllBtn" target="_blank">
+			⬇ Скачать всё архивом
+		</a>
+
+	</div>
+</div>
+
+<style>
+/* Иконка попапа скачивания */
+.popup__download-icon { font-size: 40px; text-align: center; }
+
+/* Список файлов */
+.popup__files {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* Строка файла */
+.popup__file-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	background: var(--color-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	padding: 12px 16px;
+	transition: border-color .2s;
+}
+
+.popup__file-item:hover {
+	border-color: var(--color-accent);
+}
+
+.popup__file-info {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.popup__file-icon {
+	font-size: 20px;
+	flex-shrink: 0;
+}
+
+.popup__file-name {
+	font-family: var(--font-head);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.popup__file-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+	font-family: var(--font-head);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-accent);
+	border: 1px solid rgba(37,99,235,.3);
+	padding: 6px 14px;
+	border-radius: var(--radius-sm);
+	transition: background .2s, border-color .2s;
+	white-space: nowrap;
+}
+
+.popup__file-link:hover {
+	background: rgba(37,99,235,.06);
+	border-color: var(--color-accent);
+}
+
+/* Кнопка "скачать всё" — чуть приглушённее чем основная */
+.popup__btn--download {
+	background: var(--color-text);
+	color: #fff;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	text-decoration: none;
+}
+
+.popup__btn--download:hover {
+	background: var(--color-accent);
+	color: #fff;
+}
+</style>
+
+<script>
+/* ─── Попап скачивания ─────────────────────────────────── */
+
+/* Иконки по расширению */
+function fileIcon(filename) {
+	const ext = filename.split('.').pop().toLowerCase();
+	const map = { xlsx: '📊', xls: '📊', pdf: '📄', zip: '🗜️', docx: '📝' };
+	return map[ext] || '📎';
+}
+
+function openDownloadPopup(slug, title, files) {
+	document.getElementById('downloadTitle').textContent = title;
+
+	/* Список файлов */
+	const container = document.getElementById('downloadFiles');
+	container.innerHTML = '';
+
+	files.forEach(fname => {
+		const url  = '/download/' + encodeURIComponent(slug) + '?file=' + encodeURIComponent(fname);
+		const item = document.createElement('div');
+		item.className = 'popup__file-item';
+		item.innerHTML = `
+			<div class="popup__file-info">
+				<span class="popup__file-icon">${fileIcon(fname)}</span>
+				<span class="popup__file-name">${fname}</span>
+			</div>
+			<a href="${url}" class="popup__file-link" download>⬇ Скачать</a>
+		`;
+		container.appendChild(item);
+	});
+
+	/* Кнопка архива — скрываем если файл один */
+	const allBtn = document.getElementById('downloadAllBtn');
+	if (files.length > 1) {
+		allBtn.href = '/download/' + encodeURIComponent(slug) + '?file=all';
+		allBtn.style.display = '';
+	} else {
+		allBtn.style.display = 'none';
+	}
+
+	openPopup('popupDownload');
+}
+</script>

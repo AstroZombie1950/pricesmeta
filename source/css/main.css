@@ -103,24 +103,26 @@ button.header__nav-link {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	background: var(--color-text);
-	color: #fff;
+	background: transparent;
+	color: var(--color-text);
 	font-family: var(--font-head);
 	font-size: 15px;
 	font-weight: 500;
 	padding: 8px 16px;
 	border-radius: var(--radius-sm);
-	transition: background .2s;
+	transition: background .2s, color .2s;
 	white-space: nowrap;
 }
 
 .header__nav-btn:hover {
-	background: var(--color-accent);
+	background: rgba(37,99,235,.06);
+	color: var(--color-accent);
 }
 
 .header__nav-btn-icon {
 	font-size: 16px;
 	line-height: 1;
+	margin-bottom: 3px;
 }
 
 /* обычные ссылки */
@@ -140,6 +142,23 @@ button.header__nav-link {
 	background: rgba(37,99,235,.06);
 }
 
+/* активная ссылка */
+.header__nav-link.is-active {
+	color: var(--color-accent);
+	background: rgba(37,99,235,.06);
+	font-weight: 600;
+}
+
+/* активная кнопка "Сметы" */
+.header__nav-btn.is-active {
+	background: var(--color-text);
+	color: #fff;
+}
+
+.header__nav-btn.is-active:hover {
+	background: var(--color-accent);
+	color: #fff;
+}
 
 /* короткая версия текста — скрыта на десктопе */
 .header__nav-link-short { display: none; }
@@ -1604,13 +1623,31 @@ grid-template-columns: 1fr;
 }
 
 .header__mobile-link--accent {
-	color: var(--color-accent);
 	font-weight: 600;
 }
 
 .header__mobile-link--login {
 	font-family: var(--font-head);
 	font-weight: 500;
+}
+
+/* активная ссылка в мобильном меню */
+.header__mobile-link.is-active {
+	color: var(--color-accent);
+	background: rgba(37,99,235,.06);
+	font-weight: 600;
+}
+
+/* активные "Сметы" в мобиле */
+.header__mobile-link--accent.is-active {
+	color: var(--color-accent);
+	background: rgba(37,99,235,.12);
+}
+
+/* активный пункт "Покупателям" в мобиле */
+.header__mobile-dropdown.is-active > .header__mobile-dropdown-toggle {
+	color: var(--color-accent);
+	font-weight: 600;
 }
 
 /* дропдаун внутри мобильного меню */

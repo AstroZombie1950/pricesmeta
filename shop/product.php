@@ -103,7 +103,11 @@ $badge    = ($product['old_price'] && $product['old_price'] > 0)
 
 						<!-- кнопка: скачать если куплено, иначе купить -->
 						<?php if ($hasAccess): ?>
-							<a href="/download/<?= htmlspecialchars($slug) ?>" class="product-page__btn">Скачать</a>
+							<button
+								type="button"
+								class="product-page__btn"
+								onclick="openDownloadPopup(<?= htmlspecialchars(json_encode($product['slug']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($product['title']), ENT_QUOTES) ?>, <?= htmlspecialchars($product['files'] ?? '[]', ENT_QUOTES) ?>)"
+							>Скачать</button>
 						<?php else: ?>
 							<a href="#" class="product-page__btn js-buy"
 						data-id="<?= $product['id'] ?>"
